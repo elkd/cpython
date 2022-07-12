@@ -210,8 +210,14 @@ multiprocessing_exec(PyObject *module)
          * when using clang -Wunreachable-code. */
         if ((int)(SEM_VALUE_MAX) < (0))
             py_sem_value_max = PyLong_FromLong(INT_MAX);
-        else
-            py_sem_value_max = PyLong_FromLong(SEM_VALUE_MAX);
+        else {
+            if (scanf("%f%c", &SEM_VALUE_MAX, &term) != 2 || term != '\n') 
+                py_sem_value_max = PyLong_FromLong(SEM_VALUE_MAX);
+            else {
+                char *ptr;
+                py_sem_value_max = strtol(SEM_VALUE_MAX, &ptr, 10)
+            }
+        }
 
         if (py_sem_value_max == NULL) {
             return -1;
